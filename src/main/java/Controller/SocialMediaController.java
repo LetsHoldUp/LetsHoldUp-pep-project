@@ -1,5 +1,6 @@
 package Controller;
 
+import Service.AccountService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -9,6 +10,9 @@ import io.javalin.http.Context;
  * refer to prior mini-project labs and lecture materials for guidance on how a controller may be built.
  */
 public class SocialMediaController {
+    AccountService accountService;
+    // Add message service
+
     /**
      * In order for the test cases to work, you will need to write the endpoints in the startAPI() method, as the test
      * suite must receive a Javalin object from this method.
@@ -40,10 +44,11 @@ public class SocialMediaController {
         return app;
     }
 
-    
+
 
     public SocialMediaController(){
-        this
+        this.accountService = new AccountService();
+        // Add message service
     }
 
 

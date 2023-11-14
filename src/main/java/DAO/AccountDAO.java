@@ -23,8 +23,9 @@ import java.util.List;
 //     preparedStatement.setString(2, account.getPassword());
 
 //     // Execute 
+//     preparedStatement.executeUpdate();
 
-
+//     // Process response
     
 // } catch(SQLException e){
 //     System.out.println(e.getMessage());
