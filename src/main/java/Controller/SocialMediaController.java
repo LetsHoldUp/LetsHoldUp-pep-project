@@ -18,8 +18,34 @@ public class SocialMediaController {
         Javalin app = Javalin.create();
         app.get("example-endpoint", this::exampleHandler);
 
+        // 1. new User registration
+        app.get("/register", this::insertAccount);
+
+        // 2. Process user logins
+
+        // 3. Creation of new messages
+
+        // 4. Receive all messages
+
+        // 5. Retrieve a message by ID
+
+        // 6. Delete a message by ID
+
+        // 7. Update a message by ID
+
+        // 8. Retrieve all messages by foreign key 'posted_by' 
+
+
+        //app.start(8080);
         return app;
     }
+
+    
+
+    public SocialMediaController(){
+        this
+    }
+
 
     /**
      * This is an example handler for an example endpoint.
@@ -29,5 +55,8 @@ public class SocialMediaController {
         context.json("sample text");
     }
 
+    private void insertAccount(Context ctx){
+
+    }
 
 }
