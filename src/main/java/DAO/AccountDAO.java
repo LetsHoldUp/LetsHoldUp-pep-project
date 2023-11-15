@@ -52,8 +52,8 @@ public class AccountDAO {
             preparedStatement.executeUpdate();
             ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
             if(pkeyResultSet.next()){
-                int generated_author_id = (int) pkeyResultSet.getLong(1);
-                return new Account(generated_author_id, account.getUsername(), account.getPassword());
+                int generated_account_id = (int) pkeyResultSet.getLong(1);
+                return new Account(generated_account_id, account.getUsername(), account.getPassword());
             }
             
         } catch(SQLException e){
@@ -66,10 +66,57 @@ public class AccountDAO {
 
 
     // Get account by id
+    public Account getAccountByID(long ID){
+        System.out.println("Entered this.accountDAO.getAccountByID");
+
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            // Prepare SQL and prepared statement
+            String sql = "SELECT * FROM Account WHERE account_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            // Set string of prepared statement
+            preparedStatement.setLong(1, ID);
+
+            // Execute and save results
+            ResultSet rs = preparedStatement.executeQuery();
+
+            // Process results
+            while(rs.next()){
+                return new Account(rs.getInt("account_id"), rs.getString("username"), rs.getString("password"));
+            }
+            
+        } catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
     
     
     // Get account by username
+    public Account getAccountByUsername(String username){
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            // Prepare SQL and prepared statement
+            String sql = "SELECT * FROM Account WHERE username = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
+            // Set string of prepared statement
+            preparedStatement.setString(1, username);
+
+            // Execute and save results
+            ResultSet rs = preparedStatement.executeQuery();
+
+            // Process results
+            while(rs.next()){
+                return new Account(rs.getInt("account_id"), rs.getString("username"), rs.getString("password"));
+            }
+            
+        } catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
 
     // Change Username?
 }
