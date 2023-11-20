@@ -67,8 +67,6 @@ public class AccountDAO {
 
     // Get account by id
     public Account getAccountByID(long ID){
-        System.out.println("Entered this.accountDAO.getAccountByID");
-
         Connection connection = ConnectionUtil.getConnection();
         try {
             // Prepare SQL and prepared statement

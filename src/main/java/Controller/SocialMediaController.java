@@ -1,6 +1,12 @@
 package Controller;
 
+import java.util.List;
+
+import org.h2.util.json.JSONObject;
+
+
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Model.Account;
@@ -39,15 +45,19 @@ public class SocialMediaController {
         app.post("/messages", this::postMessage);
 
         // 4. Receive all messages
+        app.get("/messages", this::getAllMessages);
 
         // 5. Retrieve a message by ID
+        app.get("/messages/{message_id}", this::getMessageById);
 
         // 6. Delete a message by ID
+        app.delete("/messages/{message_id}", this::deleteMessageById);
 
         // 7. Update a message by ID
+        app.patch("/messages/{message_id}", this::updateMessageByID);
 
         // 8. Retrieve all messages by foreign key 'posted_by' 
-
+        app.get("/accounts/{account_id}/messages", this::getMessagesFromUser);
 
         //app.start(8080);
         return app;
@@ -124,6 +134,76 @@ public class SocialMediaController {
             // Failure
             ctx.status(400);
         }
+    }
+
+    private void getAllMessages(Context ctx) throws JsonProcessingException{
+        //We need to get a list of messages
+        List<Message> messages = this.messageService.getAllMessages();
+
+        // Return the list and send 200 status
+        ctx.status(200);
+        ctx.json(messages);
+    }
+
+    private void getMessageById(Context ctx) throws JsonProcessingException{
+        // Get the message ID
+        int messageID = Integer.parseInt(ctx.pathParam("message_id"));
+
+        // Get our message
+        Message message = this.messageService.getMessageByID(messageID);
+
+        // Return the message and send a successful status
+        ctx.status(200);
+        if(message != null){
+            ctx.json(message);
+        }
+        
+    }
+
+    private void deleteMessageById(Context ctx) throws JsonProcessingException {
+        // Get the message ID
+        int messageID = Integer.parseInt(ctx.pathParam("message_id"));
+
+        // Delete and then returns our message
+        Message message = this.messageService.deleteMessageById(messageID);
+
+        // Return the message and send a successful status
+        ctx.status(200);
+        if(message != null){
+            ctx.json(message);
+        }
+    }
+
+    private void updateMessageByID(Context ctx) throws JsonProcessingException {
+        // Get the message ID
+        int messageID = Integer.parseInt(ctx.pathParam("message_id"));
+        String messageBody = ctx.body();
+
+        // Map the body into a message object so that we can just send the messageText
+        Message temp = objectMapper.readValue(messageBody, Message.class);
+
+        // Update and return message
+        Message message = this.messageService.updateMessageByID(messageID, temp.getMessage_text());
+        
+        // Process the results
+        if(message != null){
+            ctx.status(200);
+            ctx.json(message);
+        } else {
+            ctx.status(400);
+        }
+    }
+
+    private void getMessagesFromUser(Context ctx) throws JsonProcessingException {
+        // Get user ID
+        int userID = Integer.parseInt(ctx.pathParam("account_id"));
+        
+        // Call messageService.getMesagesFromUser, which will return all of the messages from the provided userid
+        List<Message> messages = this.messageService.getMessagesFromUser(userID);
+
+        // Send back our found messages and send a success status
+        ctx.status(200);
+        ctx.json(messages);
     }
 
 }
