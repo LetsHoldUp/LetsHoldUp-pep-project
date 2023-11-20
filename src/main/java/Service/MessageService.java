@@ -52,8 +52,6 @@ public class MessageService {
             return null;
         }
 
-        System.out.println(messageBody);
-
         // Ensure the message already exists
         if(this.getMessageByID(messageID) == null){
             return null;
